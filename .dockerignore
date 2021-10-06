@@ -1,0 +1,6 @@
+.git/
+.idea/
+data/
+*/target/
+*/node_modules/
+*.iml
