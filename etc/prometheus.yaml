@@ -1,26 +1,21 @@
 global:
-  scrape_interval:     15s
+  scrape_interval: 15s
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-    - targets: ['localhost:9090']
+      - targets: ["localhost:9090"]
 
-  - job_name: 'tempo'
+  - job_name: "jaeger"
     static_configs:
-    - targets: ['tempo:3100']
+      - targets: ["jaeger:16687"]
 
-  - job_name: 'loki'
+  - job_name: "loki"
     static_configs:
-    - targets: ['loki:3100']
+      - targets: ["loki:3100"]
 
-  - job_name: 'person-service'
+  - job_name: "person-service"
     metrics_path: /actuator/prometheus
     static_configs:
-    - targets: ['person-service:8090']
-
-  - job_name: 'volume_exporter'
-    metrics_path: /metrics
-    static_configs:
-    - targets: ['volume_exporter:9888']
+      - targets: ["backend:8090"]

@@ -24,7 +24,7 @@ export default () => {
       <div>
         <Button label={'Fetch persons'} id="fetch-persons" onClick={fetchPersons} />
       </div>
-      {persons.length > 0 && <div>Found {persons.length} persons</div>}
+      {persons.length > 0 && <div id="persons-count">Found {persons.length} persons</div>}
     </div>
   )
 }

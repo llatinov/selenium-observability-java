@@ -9,5 +9,5 @@ const configureProxy = (path, target) =>
 
 module.exports = function (app) {
   app.use(configureProxy('/api/person-service', 'http://localhost:8090'))
-  app.use(configureProxy('/api/tempo', 'http://localhost:55681'))
+  app.use(configureProxy('/api/tracing', 'http://localhost:4318'))
 }

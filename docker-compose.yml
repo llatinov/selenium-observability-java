@@ -4,10 +4,12 @@ networks:
   observability:
     driver: bridge
 
+volumes:
+  logs_data:
+
 services:
   postgres:
     image: postgres
-    restart: always
     environment:
       - POSTGRES_DB=person-service
       - POSTGRES_USER=postgres
@@ -22,7 +24,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    restart: unless-stopped
     ports:
       - 8005:80
     environment:
@@ -40,74 +41,35 @@ services:
     command: -config.file=/etc/loki/loki-local.yaml
     ports:
       - 3101:3100 # loki needs to be exposed so it receives logs
-    environment:
-      - JAEGER_AGENT_HOST=tempo
-      - JAEGER_ENDPOINT=http://tempo:14268/api/traces # send traces to Tempo
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
     volumes:
       - ./etc/loki-local.yaml:/etc/loki/loki-local.yaml
-      - ./data/loki-data:/tmp/loki
-    networks:
-      - observability
-
-  tempo:
-    image: grafana/tempo:1.1.0
-    command: ["-config.file=/etc/tempo.yaml"]
-    restart: unless-stopped
-    ports:
-      - 14268:14268 # Jaeger ingest, Jaeger - Thrift HTTP
-      - 14250:14250 # Jaeger - GRPC
-      - 9411:9411 # Zipkin
-      - 55680:55680 # OpenTelemetry GRPC
-      - 55681:55681 # OpenTelemetry HTTP
-      - 3102:3100 # Tempo
-    volumes:
-      - ./etc/tempo-local.yaml:/etc/tempo.yaml
-      - ./data/tempo-data:/tmp/tempo
-    networks:
-      - observability
-
-  tempo-query:
-    image: grafana/tempo-query:1.1.0
-    command: ["--grpc-storage-plugin.configuration-file=/etc/tempo-query.yaml"]
-    ports:
-      - 16686:16686 # Jaeger UI
-    volumes:
-      - ./etc/tempo-query.yaml:/etc/tempo-query.yaml
     networks:
       - observability
     depends_on:
-      - tempo
+      - backend
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.27
+    ports:
+      - 14268:14268 # Jaeger Thrift HTTP
+      - 14250:14250 # Jaeger GRPC
+      - 16686:16686 # Jaeger UI
+      - 16687:16687 # Jaeger Admin UI
+    networks:
+      - observability
+    depends_on:
+      - backend
 
   promtail:
     image: grafana/promtail:2.2.0
     command: -config.file=/etc/promtail/promtail-local.yaml
     volumes:
       - ./etc/promtail-local.yaml:/etc/promtail/promtail-local.yaml
-      - ./data/logs:/app/logs
+      - logs_data:/app/logs
     networks:
       - observability
     depends_on:
       - loki
-      - backend
-
-  volume_exporter:
-    image: mnadeem/volume_exporter
-    command:
-      [
-        "--volume-dir=tempo:/tmp/tempo",
-        "--volume-dir=logs:/app/logs",
-        "--volume-dir=loki:/tmp/loki"
-      ]
-    ports:
-      - 9889:9888
-    volumes:
-      - ./data/logs:/app/logs
-      - ./data/tempo-data:/tmp/tempo
-      - ./data/loki-data:/tmp/loki
-    networks:
-      - observability
 
   prometheus:
     image: prom/prometheus:latest
@@ -122,7 +84,6 @@ services:
       - observability
     depends_on:
       - backend
-      - volume_exporter
 
   grafana:
     image: grafana/grafana:7.4.0-ubuntu
@@ -139,8 +100,22 @@ services:
       - observability
     depends_on:
       - prometheus
-      - tempo-query
+      - jaeger
       - loki
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.35.0
+    command: "--config /etc/otel-config.yaml"
+    ports:
+      - 4317:4317 # OpenTelemetry GRPC
+      - 4318:4318 # OpenTelemetry HTTP
+    volumes:
+      - ./etc/otel-config.yaml:/etc/otel-config.yaml
+    networks:
+      - observability
+    depends_on:
+      - jaeger
+      - frontend
 
   backend:
     build:
@@ -153,12 +128,11 @@ services:
       DB_USER: postgres
       DB_PASS: postgrespassword
     volumes:
-      - ./data/logs:/app/logs
+      - logs_data:/app/logs
     networks:
       - observability
     depends_on:
       - postgres
-      - tempo
 
   frontend:
     build:
@@ -170,4 +144,3 @@ services:
       - observability
     depends_on:
       - backend
-      - tempo
