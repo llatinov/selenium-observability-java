@@ -3,7 +3,6 @@ FROM maven:3-openjdk-11 as builder
 WORKDIR /build
 
 COPY pom.xml pom.xml
-COPY person-service/pom.xml person-service/pom.xml
 RUN mvn dependency:resolve
 
 COPY . .
@@ -22,6 +21,6 @@ ENV JAVA_OPTS "$JAVA_OPTS \
   -javaagent:/app/opentelemetry-javaagent-all.jar"
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.6.2/opentelemetry-javaagent-all.jar /app/opentelemetry-javaagent-all.jar
-COPY --from=builder /build/$APP_NAME/target/$APP_NAME-*.jar /app/$APP_NAME.jar
+COPY --from=builder /build/target/$APP_NAME-*.jar /app/$APP_NAME.jar
 
 CMD java $JAVA_OPTS -jar /app/$APP_NAME.jar

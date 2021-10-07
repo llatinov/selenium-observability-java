@@ -72,7 +72,7 @@ services:
     image: grafana/tempo-query:1.1.0
     command: ["--grpc-storage-plugin.configuration-file=/etc/tempo-query.yaml"]
     ports:
-      - 16686:16686 # Jaeger-ui
+      - 16686:16686 # Jaeger UI
     volumes:
       - ./etc/tempo-query.yaml:/etc/tempo-query.yaml
     networks:
@@ -144,8 +144,8 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: ./person-service/Dockerfile
+      context: ./person-service
+      dockerfile: Dockerfile
     ports:
       - 8090:8090
     environment:
@@ -158,4 +158,16 @@ services:
       - observability
     depends_on:
       - postgres
+      - tempo
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - observability
+    depends_on:
+      - backend
       - tempo

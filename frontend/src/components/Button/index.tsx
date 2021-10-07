@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 
 interface Props {
   label: string
+  id?: string
   onClick: () => void
 }
 
@@ -21,7 +22,7 @@ export default (props: Props) => {
 
   return (
     <div>
-      <button className={styles.button} onClick={onClick}>
+      <button id={props.id} className={styles.button} onClick={onClick}>
         {props.label}
       </button>
     </div>

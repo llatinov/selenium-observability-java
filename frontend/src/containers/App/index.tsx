@@ -22,9 +22,9 @@ export default () => {
         <p>Sample Patient Service Frontend</p>
       </header>
       <div>
-        <Button label={'Fetch persons'} onClick={fetchPersons} />
+        <Button label={'Fetch persons'} id="fetch-persons" onClick={fetchPersons} />
       </div>
-      {persons.length > 0 && <div id="persons">Found {persons.length} persons</div>}
+      {persons.length > 0 && <div>Found {persons.length} persons</div>}
     </div>
   )
 }
