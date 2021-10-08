@@ -117,6 +117,16 @@ services:
       - jaeger
       - frontend
 
+  chrome:
+    build:
+      context: ./selenium-tests
+      dockerfile: Dockerfile-standalone-chrome
+    shm_size: 256M
+    networks:
+      - observability
+    ports:
+      - 4444:4444
+
   backend:
     build:
       context: ./person-service
