@@ -1,14 +1,18 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import { ThemeProvider } from '@mui/material/styles'
+import { CssBaseline } from '@mui/material'
+
 import App from 'containers/App'
 import reportWebVitals from './reportWebVitals'
+import theme from './stylesheets/theme'
+import './stylesheets/base.scss'
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </ThemeProvider>,
+  document.querySelector('#root')
 )
 
 // If you want to start measuring performance in your app, pass a function

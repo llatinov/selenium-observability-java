@@ -1,16 +1,4 @@
-import { context, trace } from '@opentelemetry/api'
-import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch'
-import { registerInstrumentations } from '@opentelemetry/instrumentation'
-import { startSpan } from 'helpers/tracing'
-
-registerInstrumentations({
-  instrumentations: [
-    new FetchInstrumentation({
-      propagateTraceHeaderCorsUrls: ['/.*/g'],
-      clearTimingResources: true
-    })
-  ]
-})
+import { traceSpan } from 'helpers/tracing'
 
 export const apiFetch = async <T extends {}>(url: string, options?: RequestInit): Promise<T> => {
   if (options && options.method !== 'GET') {
@@ -19,12 +7,8 @@ export const apiFetch = async <T extends {}>(url: string, options?: RequestInit)
     })
   }
 
-  const singleSpan = startSpan(url)
-
-  return context.with(trace.setSpan(context.active(), singleSpan), async () => {
+  return traceSpan(url, async () => {
     const response = await fetch(url, options)
-
-    singleSpan.end()
 
     const contentType = response.headers.get('content-type')
     if (contentType && contentType.includes('application/json')) {

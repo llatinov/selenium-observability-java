@@ -4,11 +4,14 @@ import { apiFetch } from 'helpers/api'
 import { personServiceUrl } from 'helpers/config'
 import { IPerson } from 'types/types'
 
-import Button from 'components/Button'
+import TracingButton from 'components/TracingButton'
+import CreateNewPersonModal from 'containers/CreateNewPersonModal'
 
 import styles from './styles.module.scss'
+import PersonsList from 'containers/PersonsList'
 
 export default () => {
+  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
   const [persons, setPersons] = React.useState<IPerson[]>([])
 
   const fetchPersons = async () => {
@@ -18,13 +21,21 @@ export default () => {
 
   return (
     <div className={styles.app}>
+      <CreateNewPersonModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
       <header className={styles.appHeader}>
         <p>Sample Patient Service Frontend</p>
       </header>
-      <div>
-        <Button label={'Fetch persons'} id="test-fetch-persons-button" onClick={fetchPersons} />
-      </div>
-      {persons.length > 0 && <div id="test-persons-count-text">Found {persons.length} persons</div>}
+
+      <TracingButton label={'Create new person'} id="test-fetch-persons-button" onClick={() => setIsModalOpen(true)} />
+
+      <TracingButton label={'Fetch persons'} id="test-fetch-persons-button" onClick={fetchPersons} />
+      {persons.length > 0 && (
+        <React.Fragment>
+          <div id="test-persons-count-text">Found {persons.length} persons</div>
+          <PersonsList persons={persons} />
+        </React.Fragment>
+      )}
     </div>
   )
 }

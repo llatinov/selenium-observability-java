@@ -1,19 +1,9 @@
-package com.automationrhapsody.observability.repositories.person;
+package com.automationrhapsody.observability.controllers;
 
-import javax.persistence.*;
+public class PersonDto {
 
-@Entity
-@Table(name = "person")
-public class Person {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "email")
     private String email;
 
     public String getFirstName() {
@@ -42,6 +32,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+        return "PersonDto [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
     }
 }

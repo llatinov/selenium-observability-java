@@ -1,9 +1,11 @@
+@import 'stylesheets/colors.module.scss';
+
 .app {
   text-align: center;
 }
 
 .appHeader {
-  background-color: #282c34;
+  background-color: $primaryColor;
   min-height: 10vh;
   display: flex;
   flex-direction: column;

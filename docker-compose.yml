@@ -45,8 +45,8 @@ services:
       - ./etc/loki-local.yaml:/etc/loki/loki-local.yaml
     networks:
       - observability
-    depends_on:
-      - backend
+    logging:
+      driver: "none"
 
   jaeger:
     image: jaegertracing/all-in-one:1.27
@@ -57,8 +57,6 @@ services:
       - 16687:16687 # Jaeger Admin UI
     networks:
       - observability
-    depends_on:
-      - backend
 
   promtail:
     image: grafana/promtail:2.2.0
@@ -82,11 +80,9 @@ services:
       - ./etc/prometheus.yaml:/etc/prometheus.yaml
     networks:
       - observability
-    depends_on:
-      - backend
 
   grafana:
-    image: grafana/grafana:7.4.0-ubuntu
+    image: grafana/grafana:8.2.1-ubuntu
     ports:
       - 3001:3000
     environment:
@@ -115,7 +111,6 @@ services:
       - observability
     depends_on:
       - jaeger
-      - frontend
 
   chrome:
     build:
@@ -153,4 +148,5 @@ services:
     networks:
       - observability
     depends_on:
+      - otel-collector
       - backend
