@@ -1,7 +1,10 @@
 FROM selenium/standalone-chrome:4.0.0
 
 # Install coursier in order to fetch the dependencies
-RUN cd /tmp && curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)" && chmod +x cs && ./cs install cs && rm cs
+RUN cd /tmp && curl -k -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)" && chmod +x cs && ./cs install cs && rm cs
+
+# Download dependencies, so they are availble during run
+RUN /home/seluser/.local/share/coursier/bin/cs fetch -p io.opentelemetry:opentelemetry-exporter-jaeger:1.6.0 io.grpc:grpc-netty:1.41.0
 
 # Modify the run command to include dependent JARs in it
 RUN sudo sed -i 's~-jar /opt/selenium/selenium-server.jar~-cp "/opt/selenium/selenium-server.jar:$(/home/seluser/.local/share/coursier/bin/cs fetch -p io.opentelemetry:opentelemetry-exporter-jaeger:1.6.0 io.grpc:grpc-netty:1.41.0)" org.openqa.selenium.grid.Main~g' /opt/bin/start-selenium-standalone.sh
@@ -10,4 +13,4 @@ RUN sudo sed -i 's~-jar /opt/selenium/selenium-server.jar~-cp "/opt/selenium/sel
 ENV JAVA_OPTS "$JAVA_OPTS \
   -Dotel.traces.exporter=jaeger \
   -Dotel.exporter.jaeger.endpoint=http://jaeger:14250 \
-  -Dotel.resource.attributes=service.name=selenium-standalone"
+  -Dotel.resource.attributes=service.name=selenium-java-server"

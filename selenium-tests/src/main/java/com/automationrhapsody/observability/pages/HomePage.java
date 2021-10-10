@@ -1,14 +1,14 @@
 package com.automationrhapsody.observability.pages;
 
-import com.automationrhapsody.observability.WebDriverFacade;
+import com.automationrhapsody.observability.TracingWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class HomePage {
 
-    private WebDriverFacade webDriver;
+    private TracingWebDriver webDriver;
 
-    public HomePage(WebDriverFacade webDriver) {
+    public HomePage(TracingWebDriver webDriver) {
         this.webDriver = webDriver;
     }
 
@@ -16,7 +16,12 @@ public class HomePage {
         return webDriver.findElement(By.id("test-fetch-persons-button"));
     }
 
-    public void fetchPersons() {
+    public CreateNewPersonPage clickCreateNewPersonButton() {
+        webDriver.findElement(By.id("test-create-person-button")).click();
+        return new CreateNewPersonPage(webDriver);
+    }
+
+    public void clickFetchPersonsButton() {
         getFetchPersonsButton().click();
     }
 

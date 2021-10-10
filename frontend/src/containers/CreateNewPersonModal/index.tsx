@@ -36,15 +36,17 @@ export default (props: Props) => {
         <TextField
           variant="filled"
           label={'First name'}
+          className={styles.margin}
           value={firstName}
           onChange={event => setFirstName(event.target.value)}
-          className={styles.margin}
+          name={'firstName'}
         />
         <TextField
           variant="filled"
           label={'Last name'}
           value={lastName}
           onChange={event => setLastName(event.target.value)}
+          name={'lastName'}
         />
       </div>
       <div className={styles.row}>
@@ -54,11 +56,12 @@ export default (props: Props) => {
           label={'Email'}
           value={email}
           onChange={event => setEmail(event.target.value)}
+          name={'email'}
         />
       </div>
       <div className={styles.row}>
-        <TracingButton secondary label={'Cancel'} id="test-fetch-persons-button" onClick={props.onClose} />
-        <TracingButton label={'Save'} id="test-fetch-persons-button" onClick={savePerson} />
+        <TracingButton secondary id="test-new-persons-button-cancel" label={'Cancel'} onClick={props.onClose} />
+        <TracingButton id="test-new-persons-button-save" label={'Save'} onClick={savePerson} />
       </div>
     </Modal>
   )

@@ -45,8 +45,7 @@ public enum WebDriverFactory {
         WebDriverFactory factory = WebDriverFactory.fromString(System.getProperty("browser"));
         factory.driverManager.setup();
         try {
-            WebDriver remoteWebDriver = new RemoteWebDriver(new URL("http://localhost:4444"), new ImmutableCapabilities("browserName", "chrome"));
-            return isRemote ? remoteWebDriver : factory.driverSupplier.get();
+            return isRemote ? new RemoteWebDriver(new URL("http://localhost:4444"), new ImmutableCapabilities("browserName", "chrome")) : factory.driverSupplier.get();
         } catch (MalformedURLException e) {
             System.out.println("Exception when creating remote driver, defaulting to: " + factory.name);
             return factory.driverSupplier.get();

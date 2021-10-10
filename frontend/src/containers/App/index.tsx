@@ -27,9 +27,9 @@ export default () => {
         <p>Sample Patient Service Frontend</p>
       </header>
 
-      <TracingButton label={'Create new person'} id="test-fetch-persons-button" onClick={() => setIsModalOpen(true)} />
+      <TracingButton id="test-create-person-button" label={'Create new person'} onClick={() => setIsModalOpen(true)} />
 
-      <TracingButton label={'Fetch persons'} id="test-fetch-persons-button" onClick={fetchPersons} />
+      <TracingButton id="test-fetch-persons-button" label={'Fetch persons'} onClick={fetchPersons} />
       {persons.length > 0 && (
         <React.Fragment>
           <div id="test-persons-count-text">Found {persons.length} persons</div>
