@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const onClick = async () => traceSpan(`'${props.label}' button clicked`, props.onClick)
+  const onClick = (): void => traceSpan(`'${props.label}' button clicked`, props.onClick)
 
   return (
     <div className={styles.button}>

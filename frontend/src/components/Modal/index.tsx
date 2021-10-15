@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const onClose = () => traceSpan("'Close modal' icon clicked", props.onClose)
+  const onClose = (): void => traceSpan("'Close modal' icon clicked", props.onClose)
 
   return (
     <Modal open={props.open} onClose={onClose}>

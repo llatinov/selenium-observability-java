@@ -1,41 +1,24 @@
-import React from 'react'
+import { Router, Route, Switch } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
+import { ThemeProvider } from '@mui/material/styles'
+import { CssBaseline } from '@mui/material'
 
-import { apiFetch } from 'helpers/api'
-import { personServiceUrl } from 'helpers/config'
-import { IPerson } from 'types/types'
+import PersonsPage from 'containers/PersonsPage'
 
-import TracingButton from 'components/TracingButton'
-import CreateNewPersonModal from 'containers/CreateNewPersonModal'
+import theme from 'stylesheets/theme'
 
-import styles from './styles.module.scss'
-import PersonsList from 'containers/PersonsList'
-
-export default () => {
-  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
-  const [persons, setPersons] = React.useState<IPerson[]>([])
-
-  const fetchPersons = async () => {
-    const persons = await apiFetch<IPerson[]>(`${personServiceUrl}/persons`)
-    setPersons(persons)
-  }
-
-  return (
-    <div className={styles.app}>
-      <CreateNewPersonModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
-
-      <header className={styles.appHeader}>
-        <p>Sample Patient Service Frontend</p>
-      </header>
-
-      <TracingButton id="test-create-person-button" label={'Create new person'} onClick={() => setIsModalOpen(true)} />
-
-      <TracingButton id="test-fetch-persons-button" label={'Fetch persons'} onClick={fetchPersons} />
-      {persons.length > 0 && (
-        <React.Fragment>
-          <div id="test-persons-count-text">Found {persons.length} persons</div>
-          <PersonsList persons={persons} />
-        </React.Fragment>
-      )}
-    </div>
-  )
-}
+export default () => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <Router history={createBrowserHistory()}>
+      <Switch>
+        <Route exact path={'/about'}>
+          <div>About Page</div>
+        </Route>
+        <Route>
+          <PersonsPage />
+        </Route>
+      </Switch>
+    </Router>
+  </ThemeProvider>
+)

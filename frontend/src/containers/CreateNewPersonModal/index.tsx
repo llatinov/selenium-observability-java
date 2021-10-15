@@ -19,7 +19,7 @@ export default (props: Props) => {
   const [lastName, setLastName] = React.useState<string>('')
   const [email, setEmail] = React.useState<string>('')
 
-  const savePerson = async () => {
+  const savePerson = async (): Promise<void> => {
     await apiFetch(`${personServiceUrl}/persons`, {
       method: 'POST',
       body: JSON.stringify({ firstName, lastName, email })
