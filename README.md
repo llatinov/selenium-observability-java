@@ -2,6 +2,9 @@
 
 Full details about code examples are available in following posts:
 * <a href="https://automationrhapsody.com/distributed-system-observability-complete-end-to-end-example-with-opentracing-jaeger-prometheus-grafana-spring-boot-react-and-selenium/">Distributed system observability: complete end-to-end example with OpenTracing, Jaeger, Prometheus, Grafana, Spring Boot, React and Selenium</a>
+* <a href="https://automationrhapsody.com/distributed-system-observability-instrument-spring-boot-application-with-opentelemetry/">Distributed system observability: Instrument Spring Boot application with OpenTelemetry</a>
+* <a href="https://automationrhapsody.com/distributed-system-observability-instrument-react-application-with-opentelemetry/">Distributed system observability: Instrument React application with OpenTelemetry</a>
+* <a href="https://automationrhapsody.com/distributed-system-observability-instrument-selenium-tests-with-opentelemetry/">Distributed system observability: Instrument Selenium tests with OpenTelemetry</a>
 
 ## Running the examples ##
 * `docker-compose build`
