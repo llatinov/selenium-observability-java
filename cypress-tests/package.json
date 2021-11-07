@@ -1,0 +1,36 @@
+{
+  "name": "cypress-tests",
+  "version": "1.0.0",
+  "description": "Cypress tests for person service frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/llatinov/selenium-observability-java.git"
+  },
+  "author": "Lyudmil Latinov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/llatinov/selenium-observability-java/issues"
+  },
+  "homepage": "https://github.com/llatinov/selenium-observability-java#readme",
+  "dependencies": {
+    "@opentelemetry/api": "1.0.3",
+    "@opentelemetry/context-zone": "1.0.0",
+    "@opentelemetry/exporter-collector": "0.25.0",
+    "@opentelemetry/sdk-trace-web": "1.0.0",
+    "cypress": "8.7.0"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "endOfLine": "auto",
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
+}
