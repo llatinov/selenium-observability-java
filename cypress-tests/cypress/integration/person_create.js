@@ -1,6 +1,6 @@
 import HomePage from '../pages/home_page'
 
-describe('Person service frontend tests', () => {
+describe('Create person', () => {
   it('createPerson_thenSave_personIsCreated', () => {
     cy.initTracing('createPerson_thenSave_personIsCreated')
 
