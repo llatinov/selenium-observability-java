@@ -1,18 +1,7 @@
 import { context, trace } from '@opentelemetry/api'
-import { WebTracerProvider } from '@opentelemetry/sdk-trace-web'
-import { Resource } from '@opentelemetry/resources'
-import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
-import { CollectorTraceExporter } from '@opentelemetry/exporter-collector'
-import { ZoneContextManager } from '@opentelemetry/context-zone'
+import { initTracer } from './init_tracing'
 
-const resource = new Resource({ 'service.name': 'cypress-tests' })
-const provider = new WebTracerProvider({ resource })
-
-const collector = new CollectorTraceExporter({ url: 'http://localhost:4318/v1/trace' })
-provider.addSpanProcessor(new SimpleSpanProcessor(collector))
-provider.register({ contextManager: new ZoneContextManager() })
-
-const webTracerWithZone = provider.getTracer('cypress-tests')
+const webTracerWithZone = initTracer('cypress-tests-overwrite')
 
 var mainSpan = undefined
 var currentSpan = undefined

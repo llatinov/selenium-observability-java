@@ -1,6 +1,6 @@
-import HomePage from '../pages/home_page'
+import HomePage from '../../pages/overwrite/home_page'
 
-describe('Fetch person', () => {
+describe('Fetch person with commands overwrite', () => {
   it('createPerson_thenCancel_personIsNotCreated', () => {
     cy.initTracing('createPerson_thenCancel_personIsNotCreated')
 
