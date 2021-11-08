@@ -1,10 +1,16 @@
 import ReactDOM from 'react-dom'
 
+import { ContextProvider } from 'helpers/context'
 import App from 'containers/App'
 import reportWebVitals from './reportWebVitals'
 import './stylesheets/base.scss'
 
-ReactDOM.render(<App />, document.querySelector('#root'))
+ReactDOM.render(
+  <ContextProvider>
+    <App />
+  </ContextProvider>,
+  document.querySelector('#root')
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

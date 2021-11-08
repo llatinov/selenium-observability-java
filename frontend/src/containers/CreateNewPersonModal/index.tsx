@@ -3,6 +3,7 @@ import { TextField } from '@mui/material'
 
 import { apiFetch } from 'helpers/api'
 import { personServiceUrl } from 'helpers/config'
+import { Context, toggleProgressIndicator } from 'helpers/context'
 
 import Modal from 'components/Modal'
 import TracingButton from 'components/TracingButton'
@@ -15,21 +16,27 @@ interface Props {
 }
 
 export default (props: Props) => {
+  const [, dispatch] = React.useContext(Context)
   const [firstName, setFirstName] = React.useState<string>('')
   const [lastName, setLastName] = React.useState<string>('')
   const [email, setEmail] = React.useState<string>('')
 
   const savePerson = async (): Promise<void> => {
-    await apiFetch(`${personServiceUrl}/persons`, {
-      method: 'POST',
-      body: JSON.stringify({ firstName, lastName, email })
-    })
-
-    setFirstName('')
-    setLastName('')
-    setEmail('')
     props.onClose()
+    toggleProgressIndicator(dispatch)
+    try {
+      await apiFetch(`${personServiceUrl}/persons`, {
+        method: 'POST',
+        body: JSON.stringify({ firstName, lastName, email })
+      })
+    } finally {
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+      toggleProgressIndicator(dispatch)
+    }
   }
+
   return (
     <Modal open={props.open} title={'Add new person'} onClose={props.onClose}>
       <div className={styles.row}>
