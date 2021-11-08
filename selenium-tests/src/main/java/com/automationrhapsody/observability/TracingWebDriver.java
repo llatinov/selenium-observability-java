@@ -43,18 +43,8 @@ public class TracingWebDriver {
         mainSpan.end();
     }
 
-    public Object executeJavaScript(String script) {
-        return ((JavascriptExecutor) driver).executeScript(script);
-    }
-
-    public String captureScreenshot() {
-        File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String output = screenshotFile.getAbsolutePath();
-        System.out.println(output);
-        return output;
-    }
-
     public void get(String url) {
+        waitToLoad();
         currentSpan = mainSpan;
         Span span = createChildSpan("get: " + url);
         try {
@@ -69,15 +59,8 @@ public class TracingWebDriver {
         }
     }
 
-    public void quit() {
-        forceFlushTraces();
-        currentSpan = mainSpan;
-        Span span = createChildSpan("quit");
-        driver.quit();
-        span.end();
-    }
-
     public WebElement findElement(By by) {
+        waitToLoad();
         Span span = createChildSpan("findElement: " + by.toString());
         try {
             createBrowserBindingSpan(span);
@@ -93,6 +76,7 @@ public class TracingWebDriver {
     }
 
     public List<WebElement> findElements(By by) {
+        waitToLoad();
         Span span = createChildSpan("findElements: " + by.toString());
         try {
             createBrowserBindingSpan(span);
@@ -105,6 +89,31 @@ public class TracingWebDriver {
         } finally {
             span.end();
         }
+    }
+
+    public void quit() {
+        waitToLoad();
+        forceFlushTraces();
+        currentSpan = mainSpan;
+        Span span = createChildSpan("quit");
+        driver.quit();
+        span.end();
+    }
+
+    public Object executeJavaScript(String script) {
+        return ((JavascriptExecutor) driver).executeScript(script);
+    }
+
+    public String captureScreenshot() {
+        File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        String output = screenshotFile.getAbsolutePath();
+        System.out.println(output);
+        return output;
+    }
+
+    private void waitToLoad() {
+        WebDriverWait wait = new WebDriverWait(driver, WAIT_SECONDS);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("test-progress-indicator")));
     }
 
     private void initializeTracer() {
