@@ -30,6 +30,7 @@ public class PersonService {
         doSomeWorkNewChildSpan();
         doNothing();
         Iterable<PersonEntity> persons = flightRepository.findAll();
+        delay(2000);
         return StreamSupport.stream(persons.spliterator(), false)
                 .map(this::toPersonDto)
                 .collect(Collectors.toList());
@@ -38,6 +39,7 @@ public class PersonService {
     public Long savePerson(PersonDto person) {
         PersonEntity personEntity = toPersonEntity(person);
         PersonEntity result = flightRepository.save(personEntity);
+        delay(1000);
         return result.getId();
     }
 
@@ -48,16 +50,19 @@ public class PersonService {
         span.setAttribute("template.a2", "some value");
         span.addEvent("template.processing2.start", attributes("321"));
         span.addEvent("template.processing2.end", attributes("321"));
+        delay(150);
     }
 
     @WithSpan
     public void doNothing() {
+        delay(250);
     }
 
     @WithSpan
     public void doSomeWorkNewParentSpan() {
         LOGGER.info("Doing some work In New parent span");
         Span span = Span.fromContext(Context.current());
+        delay(350);
         span.end();
         doSomeWorkNewChildSpan();
     }
@@ -80,5 +85,13 @@ public class PersonService {
         personEntity.setLastName(person.getLastName());
         personEntity.setEmail(person.getEmail());
         return personEntity;
+    }
+
+    private void delay(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
     }
 }
