@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -89,7 +90,8 @@ public class PersonService {
 
     private void delay(int ms) {
         try {
-            Thread.sleep(ms);
+            Random random = new Random();
+            Thread.sleep((int) (ms * random.nextFloat()));
         } catch (InterruptedException e) {
             // Do nothing
         }
