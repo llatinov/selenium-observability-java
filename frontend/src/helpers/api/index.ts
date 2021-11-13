@@ -10,6 +10,10 @@ export const apiFetch = async <T extends {}>(url: string, options?: RequestInit)
   return traceSpan(url, async () => {
     const response = await fetch(url, options)
 
+    if (response.status > 299) {
+      return Promise.reject()
+    }
+
     const contentType = response.headers.get('content-type')
     if (contentType && contentType.includes('application/json')) {
       const text = await response.text()
