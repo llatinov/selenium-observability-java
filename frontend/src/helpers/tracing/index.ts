@@ -39,6 +39,10 @@ registerInstrumentations({
       propagateTraceHeaderCorsUrls: ['/.*/g'],
       clearTimingResources: true,
       applyCustomAttributesOnSpan: (span: Span, request: Request | RequestInit, result: Response | FetchError) => {
+        const attributes = (span as any).attributes
+        if (attributes.component === 'fetch') {
+          span.updateName(`${attributes['http.method']} ${attributes['http.url']}`)
+        }
         if (result.status && result.status > 299) {
           span.setStatus({ code: SpanStatusCode.ERROR })
         }

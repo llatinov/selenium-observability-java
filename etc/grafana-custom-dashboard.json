@@ -73,7 +73,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "latency_count{operation=\"/api/person-service/persons\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_INTERNAL\",status_code=\"STATUS_CODE_ERROR\"}",
+          "expr": "latency_count{operation=\"GET /api/person-service/persons\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_CLIENT\",status_code=\"STATUS_CODE_ERROR\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -102,7 +102,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "latency_count{instance=\"otel-collector:8889\", job=\"otel-collector\", operation=\"/api/person-service/persons\", service_name=\"person-service-frontend\", span_kind=\"SPAN_KIND_INTERNAL\", status_code=\"STATUS_CODE_UNSET\"}"
+              "options": "latency_count{instance=\"otel-collector:8889\", job=\"otel-collector\", operation=\"GET /api/person-service/persons\", service_name=\"person-service-frontend\", span_kind=\"SPAN_KIND_CLIENT\", status_code=\"STATUS_CODE_UNSET\"}"
             },
             "properties": [
               {
@@ -117,7 +117,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "latency_count{instance=\"otel-collector:8889\", job=\"otel-collector\", operation=\"/api/person-service/persons\", service_name=\"person-service-frontend\", span_kind=\"SPAN_KIND_INTERNAL\", status_code=\"STATUS_CODE_ERROR\"}"
+              "options": "latency_count{instance=\"otel-collector:8889\", job=\"otel-collector\", operation=\"GET /api/person-service/persons\", service_name=\"person-service-frontend\", span_kind=\"SPAN_KIND_CLIENT\", status_code=\"STATUS_CODE_ERROR\"}"
             },
             "properties": [
               {
@@ -157,13 +157,13 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "latency_count{operation=\"/api/person-service/persons\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_INTERNAL\"}",
+          "expr": "latency_count{operation=\"GET /api/person-service/persons\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_CLIENT\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Error ratio",
+      "title": "Ratio",
       "type": "piechart"
     },
     {
@@ -212,14 +212,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "latency_bucket{operation=\"HTTP GET\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_CLIENT\",status_code=\"STATUS_CODE_UNSET\"}",
+          "expr": "latency_bucket{operation=\"GET /api/person-service/persons\",service_name=\"person-service-frontend\",span_kind=\"SPAN_KIND_CLIENT\",status_code=\"STATUS_CODE_UNSET\"}",
           "format": "heatmap",
           "interval": "1",
           "legendFormat": "{{le}}",
           "refId": "A"
         }
       ],
-      "title": "Fetch persons",
+      "title": "Distribution of successful requests (ms)",
       "type": "bargauge"
     }
   ],
@@ -235,7 +235,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Custom Dashboard",
+  "title": "Fetch persons",
   "uid": "bgZ6Mf5nk",
   "version": 1
 }
