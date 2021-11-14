@@ -43,10 +43,10 @@ services:
       - 3101:3100 # loki needs to be exposed so it receives logs
     volumes:
       - ./etc/loki-local.yaml:/etc/loki/loki-local.yaml
-    networks:
-      - observability
     logging:
       driver: "none"
+    networks:
+      - observability
 
   jaeger:
     image: jaegertracing/all-in-one:1.27
@@ -92,6 +92,7 @@ services:
     volumes:
       - ./etc/grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./etc/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./etc/grafana-custom-dashboard.json:/var/lib/grafana/dashboards/grafana-custom-dashboard.json
     networks:
       - observability
     depends_on:
@@ -100,11 +101,12 @@ services:
       - loki
 
   otel-collector:
-    image: otel/opentelemetry-collector:0.35.0
+    image: otel/opentelemetry-collector-contrib:0.38.0
     command: "--config /etc/otel-config.yaml"
     ports:
       - 4317:4317 # OpenTelemetry GRPC
       - 4318:4318 # OpenTelemetry HTTP
+      - 8889:8889 # Prometheus
     volumes:
       - ./etc/otel-config.yaml:/etc/otel-config.yaml
     networks:
@@ -117,10 +119,10 @@ services:
       context: ./selenium-tests
       dockerfile: Dockerfile-standalone-chrome
     shm_size: 256M
-    networks:
-      - observability
     ports:
       - 4444:4444
+    networks:
+      - observability
 
   backend:
     build:

@@ -3,18 +3,33 @@ receivers:
     protocols:
       grpc:
       http:
+  otlp/spanmetrics:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:12346
 
 processors:
   batch:
+  spanmetrics:
+    metrics_exporter: prometheus
+    latency_histogram_buckets:
+      [200ms, 400ms, 800ms, 1s, 1200ms, 1400ms, 1600ms, 1800ms, 2s, 5s, 7s]
 
 exporters:
   jaeger:
     endpoint: jaeger:14250
-    insecure: true
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    metric_expiration: 1440m
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [spanmetrics, batch]
       exporters: [jaeger]
+    metrics:
+      receivers: [otlp/spanmetrics]
+      exporters: [prometheus]
