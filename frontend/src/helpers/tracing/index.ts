@@ -60,16 +60,15 @@ export function traceSpan<F extends (...args: any) => ReturnType<F>>(name: strin
   } else {
     singleSpan = webTracerWithZone.startSpan(name)
   }
-  return context.with(trace.setSpan(context.active(), singleSpan), () =>
-    (func() as any)
-      .then((result: ReturnType<F>) => {
-        singleSpan.end()
-        return result
-      })
-      .catch((error: any) => {
-        singleSpan.setStatus({ code: SpanStatusCode.ERROR })
-        singleSpan.end()
-        throw error
-      })
-  )
+  return context.with(trace.setSpan(context.active(), singleSpan), () => {
+    try {
+      const result = func()
+      singleSpan.end()
+      return result
+    } catch (error) {
+      singleSpan.setStatus({ code: SpanStatusCode.ERROR })
+      singleSpan.end()
+      throw error
+    }
+  })
 }
