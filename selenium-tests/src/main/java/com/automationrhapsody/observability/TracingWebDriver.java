@@ -10,6 +10,7 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.tracing.opentelemetry.OpenTelemetryTracer;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -38,14 +39,14 @@ public class TracingWebDriver {
         mainSpan = tracer.spanBuilder("webdriver-create").startSpan();
         mainSpan.setAttribute("test.class.name", className);
         mainSpan.setAttribute("test.method.name", methodName);
-        currentSpan = mainSpan;
+        setCurrentSpan(mainSpan);
         driver = WebDriverFactory.createDriver(isRemote);
         mainSpan.end();
     }
 
     public void get(String url) {
         waitToLoad();
-        currentSpan = mainSpan;
+        setCurrentSpan(mainSpan);
         Span span = createChildSpan("get: " + url);
         try {
             forceFlushTraces();
@@ -94,7 +95,7 @@ public class TracingWebDriver {
     public void quit() {
         waitToLoad();
         forceFlushTraces();
-        currentSpan = mainSpan;
+        setCurrentSpan(mainSpan);
         Span span = createChildSpan("quit");
         driver.quit();
         span.end();
@@ -135,12 +136,20 @@ public class TracingWebDriver {
         Span span = tracer.spanBuilder(name)
                 .setParent(Context.current().with(currentSpan))
                 .startSpan();
-        currentSpan = span;
+        setCurrentSpan(span);
         return span;
     }
 
+    private void setCurrentSpan(Span span) {
+        currentSpan = span;
+        OpenTelemetryTracer.getInstance().setOpenTelemetryContext(Context.current().with(span));
+    }
+
     private void createBrowserBindingSpan(Span span) {
-        executeJavaScript("window.startBindingSpan('" + span.getSpanContext().getTraceId() + "', '" + span.getSpanContext().getSpanId() + "', '" + span.getSpanContext().getTraceFlags().asHex() + "')");
+        executeJavaScript("window.startBindingSpan('"
+                + span.getSpanContext().getTraceId() + "', '"
+                + span.getSpanContext().getSpanId() + "', '"
+                + span.getSpanContext().getTraceFlags().asHex() + "')");
     }
 
     private void forceFlushTraces() {
