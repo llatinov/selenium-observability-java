@@ -5,6 +5,8 @@ Full details about code examples are available in following posts:
 * <a href="https://automationrhapsody.com/distributed-system-observability-instrument-spring-boot-application-with-opentelemetry/">Distributed system observability: Instrument Spring Boot application with OpenTelemetry</a>
 * <a href="https://automationrhapsody.com/distributed-system-observability-instrument-react-application-with-opentelemetry/">Distributed system observability: Instrument React application with OpenTelemetry</a>
 * <a href="https://automationrhapsody.com/distributed-system-observability-instrument-selenium-tests-with-opentelemetry/">Distributed system observability: Instrument Selenium tests with OpenTelemetry</a>
+* <a href="https://automationrhapsody.com/distributed-system-observability-instrument-cypress-tests-with-opentelemetry/">Distributed system observability: Instrument Cypress tests with OpenTelemetry</a>
+* <a href="https://automationrhapsody.com/distributed-system-observability-extract-and-visualize-metrics-from-opentelemetry-spans/">Distributed system observability: extract and visualize metrics from OpenTelemetry spans</a>
 
 ## Running the examples ##
 * `docker-compose build`
